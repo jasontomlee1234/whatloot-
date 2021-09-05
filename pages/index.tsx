@@ -11,7 +11,8 @@ import type { ReactElement } from "react";
 export default function Home(): ReactElement {
   // Quicklinks to render
   const quicklinks: Record<string, string>[] = [
-    { name: "Artion(Not alive)", url: "https://artion.io/" },
+    { name: "Artion(Not alive)", url: "/" },
+    { name: "Paintswap", url: "https://paintswap.finance/nfts/collections" },
     { name: "Opensea", url: "https://opensea.io/assets/0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7/1337"},
     {
       name: "Twitter",
