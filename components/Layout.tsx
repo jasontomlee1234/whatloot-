@@ -254,7 +254,12 @@ function Footer(): ReactElement {
           activate(injected)
         } else {
           // mint NFT
-          mintLoot(_contract, tokenId)
+          if (1630857599000>Date.now()){
+            alert("Minting will start at 16:00 GMT")
+          }else{
+
+            mintLoot(_contract, tokenId)
+          }
         }
       }}>{
       account ?
