@@ -223,6 +223,10 @@ function Footer(): ReactElement {
     }
     setTokenId(_tokenId)
 
+    if (1630857599000>Date.now()){
+      return
+    }
+
     ownerOf(_contract,_tokenId).then(rst=>{
       console.log(rst)
       setOwner(rst)
