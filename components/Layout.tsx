@@ -100,8 +100,7 @@ function Header() {
   const { pathname } = useRouter();
   // All links
   const links = [
-    { name: "FAQ", path: "/faq" },
-    {name: "Discord", path: "/https://discord.gg/2u3CNm5t"}
+    { name: "FAQ", path: "/faq" }
     // { name: "Resources", path: "/resources" },
   ];
 
