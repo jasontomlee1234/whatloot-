@@ -18,9 +18,13 @@ export default function Home(): ReactElement {
       url: "https://twitter.com/FantomLoot",
     },
     {
-      name: "Contract",
-      url: "https://ftmscan.com/address/0x0360a4fc13a0be64089e08f999e6d335832ada9f#code",
-    },
+      name: "Discord",
+      url: "https://discord.gg/2u3CNm5t",
+    }
+    // {
+    //   name: "Contract",
+    //   url: "https://ftmscan.com/address/0x0360a4fc13a0be64089e08f999e6d335832ada9f#code",
+    // },
   ];
 
   /**

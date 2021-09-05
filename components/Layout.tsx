@@ -101,6 +101,7 @@ function Header() {
   // All links
   const links = [
     { name: "FAQ", path: "/faq" },
+    {name: "Discord", path: "/https://discord.gg/2u3CNm5t"}
     // { name: "Resources", path: "/resources" },
   ];
 
