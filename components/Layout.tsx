@@ -267,7 +267,7 @@ function Footer(): ReactElement {
       }</button>
       {
             account ? <div style={{margin: "30px"}}><button
-              style={{background: "transparent", border: "none", color: "white", fontSize:"30px"}}
+              style={{background: "transparent", border: "none", color: "white", fontSize:"30px", cursor: "pointer"}}
               onClick={async () => {
                 const _tokenUris = await getCollection(_contract, account)
                 setTokenUris(_tokenUris as any)
