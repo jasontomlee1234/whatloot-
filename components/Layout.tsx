@@ -257,6 +257,7 @@ function Footer(): ReactElement {
   function handleChange(e: any) {
     setMintedOnOld(false)
     setApproved(false)
+    setOwner("")
     let _tokenId = e.target.value;
     if (_tokenId < 1) {
       _tokenId = 1;
@@ -317,16 +318,16 @@ function Footer(): ReactElement {
       ) : null}
       {
         mintedOnOld && owner == "" ? <div>
-          <img style={{ width: "400px" }} src={imageData} />
           <div style={{ color: "red" }}>This is minted on old contract. If you are the owner, please approve and mint a new one.</div>
         </div> : null
       }
       {
         mintedOnOld && owner == "" ? <button
           style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
-          onClick={() => {
+          onClick={async() => {
             if (!approved) {
-              approve(_oldContract, tokenId)
+              await approve(_oldContract, tokenId)
+              setApproved(true)
             } else {
               // mint NFT
               mintOldLoot(_contract, tokenId);
