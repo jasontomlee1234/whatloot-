@@ -12,7 +12,7 @@ import Dialog from "@material-ui/core/Dialog";
 
 // Types
 import type { ReactElement } from "react";
-import abi from "./fantomloot.json";
+import abi from "./newFantomloot.json";
 
 const injected = new InjectedConnector({ supportedChainIds: [250] });
 
@@ -128,7 +128,7 @@ function Header() {
                     className={
                       pathname === path
                         ? // Active class if pathname matches current path
-                          styles.header__links_active
+                        styles.header__links_active
                         : undefined
                     }
                   >
@@ -156,12 +156,38 @@ function mintLoot(contract: any, tokenId: any) {
   });
 }
 
+function mintOldLoot(contract: any, tokenId: any) {
+  contract.claimOldLoot(tokenId).catch((e: any) => {
+    try {
+      console.log(e);
+      alert(e.data.message);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
+async function approve(contract: any, tokenId: any) {
+  const tx = await contract.approve(tokenId, "0x3800b6f6d149a8b9BB0c4021f7fE59bC8b708e1C")
+  await tx.wait()
+}
+
 async function ownerOf(contract: any, tokenId: any) {
   try {
     const owner = await contract.ownerOf(tokenId);
     return owner;
   } catch (e) {
     return "";
+  }
+}
+
+async function isOldLootMinted(contract: any, tokenId: any) {
+  try {
+    const isMinted = await contract.isOldLootMinted(tokenId);
+    return isMinted;
+  } catch (e) {
+    console.log(e)
+    return false;
   }
 }
 
@@ -208,7 +234,7 @@ function Footer(): ReactElement {
   const { connector, library, activate, deactivate, active, error } =
     useWeb3React();
   const _contract = getContract(
-    "0x0360A4fC13A0BE64089E08F999E6D335832aDA9f",
+    "0x3800b6f6d149a8b9BB0c4021f7fE59bC8b708e1C",
     abi,
     library ? library.getSigner(account).connectUnchecked() : library
   );
@@ -218,7 +244,10 @@ function Footer(): ReactElement {
   const [imageData, setImageData] = useState();
   const [tokenUris, setTokenUris] = useState([]);
   const [open, setOpen] = useState(false);
+  const [mintedOnOld, setMintedOnOld] = useState(false);
+  const [approved, setApproved] = useState(false)
   function handleChange(e: any) {
+    setMintedOnOld(false)
     let _tokenId = e.target.value;
     if (_tokenId < 1) {
       _tokenId = 1;
@@ -240,6 +269,13 @@ function Footer(): ReactElement {
       .catch((e) => {
         setOwner("");
       });
+
+    isOldLootMinted(_contract, _tokenId).then((rst) => {
+      if (rst) {
+        console.log("this loot was minted on the old contract")
+        setMintedOnOld(true)
+      }
+    })
   }
 
   const handleClickOpen = () => {
@@ -270,20 +306,40 @@ function Footer(): ReactElement {
           <div style={{ color: "red" }}>owner: {owner}</div>
         </div>
       ) : null}
-      <button
-        style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
-        onClick={() => {
-          if (!account) {
-            activate(injected);
-          } else {
-            // mint NFT
+      {
+        mintedOnOld && owner == "" ? <div>
+          <img style={{ width: "400px" }} src={imageData} />
+          <div style={{ color: "red" }}>This is minted on old contract. If you are the owner, please approve and mint a new one.</div>
+        </div> : null
+      }
+      {
+        mintedOnOld && owner == "" ? <button
+          style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
+          onClick={() => {
+            if (!approved) {
+              approve(_contract,tokenId)
+            } else {
+              // mint NFT
+              mintOldLoot(_contract, tokenId);
+            }
+          }}
+        >
+          {!approved ? "Approve" : "Mint For Free"}
+        </button> : <button
+          style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
+          onClick={() => {
+            if (!account) {
+              activate(injected);
+            } else {
+              // mint NFT
+              mintLoot(_contract, tokenId);
+            }
+          }}
+        >
+          {account ? "Mint My Fantom Loot at 49 FTM" : "Connect"}
+        </button>
+      }
 
-            mintLoot(_contract, tokenId);
-          }
-        }}
-      >
-        {account ? "Mint My Fantom Loot at 49 FTM" : "Connect"}
-      </button>
       {account ? (
         <div style={{ margin: "30px" }}>
           <button
