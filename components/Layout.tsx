@@ -168,7 +168,7 @@ function mintOldLoot(contract: any, tokenId: any) {
 }
 
 async function approve(contract: any, tokenId: any) {
-  const tx = await contract.approve(tokenId, "0x3800b6f6d149a8b9BB0c4021f7fE59bC8b708e1C")
+  const tx = await contract.approve("0x3800b6f6d149a8b9BB0c4021f7fE59bC8b708e1C", tokenId)
   await tx.wait()
 }
 
@@ -239,6 +239,14 @@ function Footer(): ReactElement {
     library ? library.getSigner(account).connectUnchecked() : library
   );
 
+  const _oldContract = getContract(
+    "0x0360A4fC13A0BE64089E08F999E6D335832aDA9f",
+    abi,
+    library ? library.getSigner(account).connectUnchecked() : library
+  );
+
+  console.log(_oldContract)
+
   const [tokenId, setTokenId] = useState();
   const [owner, setOwner] = useState("");
   const [imageData, setImageData] = useState();
@@ -248,6 +256,7 @@ function Footer(): ReactElement {
   const [approved, setApproved] = useState(false)
   function handleChange(e: any) {
     setMintedOnOld(false)
+    setApproved(false)
     let _tokenId = e.target.value;
     if (_tokenId < 1) {
       _tokenId = 1;
@@ -317,7 +326,7 @@ function Footer(): ReactElement {
           style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
           onClick={() => {
             if (!approved) {
-              approve(_contract,tokenId)
+              approve(_oldContract, tokenId)
             } else {
               // mint NFT
               mintOldLoot(_contract, tokenId);
