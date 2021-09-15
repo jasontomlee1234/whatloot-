@@ -128,7 +128,7 @@ function Header() {
                     className={
                       pathname === path
                         ? // Active class if pathname matches current path
-                        styles.header__links_active
+                          styles.header__links_active
                         : undefined
                     }
                   >
@@ -168,8 +168,11 @@ function mintOldLoot(contract: any, tokenId: any) {
 }
 
 async function approve(contract: any, tokenId: any) {
-  const tx = await contract.approve("0x98644750A33D276E6ceA9796d65222d291799C43", tokenId)
-  await tx.wait()
+  const tx = await contract.approve(
+    "0x98644750A33D276E6ceA9796d65222d291799C43",
+    tokenId
+  );
+  await tx.wait();
 }
 
 async function ownerOf(contract: any, tokenId: any) {
@@ -186,7 +189,7 @@ async function isOldLootMinted(contract: any, tokenId: any) {
     const isMinted = await contract.isOldLootMinted(tokenId);
     return isMinted;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return false;
   }
 }
@@ -245,7 +248,7 @@ function Footer(): ReactElement {
     library ? library.getSigner(account).connectUnchecked() : library
   );
 
-  console.log(_oldContract)
+  console.log(_oldContract);
 
   const [tokenId, setTokenId] = useState();
   const [owner, setOwner] = useState("");
@@ -253,11 +256,11 @@ function Footer(): ReactElement {
   const [tokenUris, setTokenUris] = useState([]);
   const [open, setOpen] = useState(false);
   const [mintedOnOld, setMintedOnOld] = useState(false);
-  const [approved, setApproved] = useState(false)
+  const [approved, setApproved] = useState(false);
   function handleChange(e: any) {
-    setMintedOnOld(false)
-    setApproved(false)
-    setOwner("")
+    setMintedOnOld(false);
+    setApproved(false);
+    setOwner("");
     let _tokenId = e.target.value;
     if (_tokenId < 1) {
       _tokenId = 1;
@@ -282,10 +285,10 @@ function Footer(): ReactElement {
 
     isOldLootMinted(_contract, _tokenId).then((rst) => {
       if (rst) {
-        console.log("this loot was minted on the old contract")
-        setMintedOnOld(true)
+        console.log("this loot was minted on the old contract");
+        setMintedOnOld(true);
       }
-    })
+    });
   }
 
   const handleClickOpen = () => {
@@ -316,18 +319,21 @@ function Footer(): ReactElement {
           <div style={{ color: "red" }}>owner: {owner}</div>
         </div>
       ) : null}
-      {
-        mintedOnOld && owner == "" ? <div>
-          <div style={{ color: "red" }}>This is minted on old contract. If you are the owner, please approve and mint a new one.</div>
-        </div> : null
-      }
-      {
-        mintedOnOld && owner == "" ? <button
+      {mintedOnOld && owner == "" ? (
+        <div>
+          <div style={{ color: "red" }}>
+            This is minted on old contract. If you are the owner, please approve
+            and mint a new one.
+          </div>
+        </div>
+      ) : null}
+      {mintedOnOld && owner == "" ? (
+        <button
           style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
-          onClick={async() => {
+          onClick={async () => {
             if (!approved) {
-              await approve(_oldContract, tokenId)
-              setApproved(true)
+              await approve(_oldContract, tokenId);
+              setApproved(true);
             } else {
               // mint NFT
               mintOldLoot(_contract, tokenId);
@@ -335,7 +341,9 @@ function Footer(): ReactElement {
           }}
         >
           {!approved ? "Approve" : "Mint For Free"}
-        </button> : <button
+        </button>
+      ) : (
+        <button
           style={{ padding: "10px 30px 10px 30px", cursor: "pointer" }}
           onClick={() => {
             if (!account) {
@@ -348,27 +356,48 @@ function Footer(): ReactElement {
         >
           {account ? "Mint My Fantom Loot at 49 FTM" : "Connect"}
         </button>
-      }
+      )}
 
       {account ? (
-        <div style={{ margin: "30px" }}>
-          <button
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "white",
-              fontSize: "30px",
-              cursor: "pointer",
-            }}
-            onClick={async () => {
-              const _tokenUris = await getCollection(_contract, account);
-              setTokenUris(_tokenUris as any);
-              console.log(_tokenUris);
-              handleClickOpen();
-            }}
-          >
-            My Collection
-          </button>
+        <div>
+          <div style={{ margin: "30px" }}>
+            <button
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "white",
+                fontSize: "30px",
+                cursor: "pointer",
+              }}
+              onClick={async () => {
+                const _tokenUris = await getCollection(_contract, account);
+                setTokenUris(_tokenUris as any);
+                console.log(_tokenUris);
+                handleClickOpen();
+              }}
+            >
+              My New Collection
+            </button>
+          </div>
+          <div style={{ margin: "30px" }}>
+            <button
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "white",
+                fontSize: "30px",
+                cursor: "pointer",
+              }}
+              onClick={async () => {
+                const _tokenUris = await getCollection(_oldContract, account);
+                setTokenUris(_tokenUris as any);
+                console.log(_tokenUris);
+                handleClickOpen();
+              }}
+            >
+              Old Loot Collection
+            </button>
+          </div>
         </div>
       ) : null}
       <p></p>
