@@ -168,7 +168,7 @@ function mintOldLoot(contract: any, tokenId: any) {
 }
 
 async function approve(contract: any, tokenId: any) {
-  const tx = await contract.approve("0x3800b6f6d149a8b9BB0c4021f7fE59bC8b708e1C", tokenId)
+  const tx = await contract.approve("0x98644750A33D276E6ceA9796d65222d291799C43", tokenId)
   await tx.wait()
 }
 
@@ -234,7 +234,7 @@ function Footer(): ReactElement {
   const { connector, library, activate, deactivate, active, error } =
     useWeb3React();
   const _contract = getContract(
-    "0x3800b6f6d149a8b9BB0c4021f7fE59bC8b708e1C",
+    "0x98644750A33D276E6ceA9796d65222d291799C43",
     abi,
     library ? library.getSigner(account).connectUnchecked() : library
   );
